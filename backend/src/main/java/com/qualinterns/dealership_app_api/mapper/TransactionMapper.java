@@ -24,6 +24,10 @@ public interface TransactionMapper {
     }
 
     @Mapping(target = "transaction_id", ignore = true)
+    @Mapping(target = "vehicle", ignore = true)
+    @Mapping(target = "agent", ignore = true)
+    @Mapping(target = "customer", ignore = true)
     Transaction toEntity(RegisterTransactionRequest request);
+    
     RecentTransactionDto toRecentDto(Transaction transaction);
 }

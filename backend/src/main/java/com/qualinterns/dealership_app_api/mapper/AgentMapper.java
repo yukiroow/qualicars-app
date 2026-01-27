@@ -11,5 +11,6 @@ public interface AgentMapper {
     AgentDto toDto(Agent agent);
 
     @Mapping(target = "agent_id", ignore = true)
+    @Mapping(target = "date_joined", ignore = true)
     Agent toEntity(RegisterAgentRequest request);
 }
