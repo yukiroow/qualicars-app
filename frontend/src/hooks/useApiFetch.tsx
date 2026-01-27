@@ -1,8 +1,7 @@
 import { useState } from "react";
 import type { ApiResponse, FetchProps } from "../props/PropInterfaces";
 
-// const serverUrl = import.meta.env.VITE_API_URL;
-const serverUrl = "http://192.168.15.199:8080/api";
+const serverUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 const useApiFetch = () => {
     const [responseData, setResponseData] = useState({});
