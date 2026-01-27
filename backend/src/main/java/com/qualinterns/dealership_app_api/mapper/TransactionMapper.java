@@ -23,6 +23,7 @@ public interface TransactionMapper {
         return (first + " " + last).trim();
     }
 
+    @Mapping(target = "transaction_id", ignore = true)
     Transaction toEntity(RegisterTransactionRequest request);
     RecentTransactionDto toRecentDto(Transaction transaction);
 }
