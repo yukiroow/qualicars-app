@@ -9,12 +9,12 @@ docker compose -f docker/docker-compose.dev.yml up
 
 # TODO
 
-~~## Environment~~
+## ~~Environment~~
 
 ~~Separate Development and Production environments~~
-~~- Create Dockerfiles~~
-~~- Create Docker-compose~~
-~~- Create .env files~~
+- ~~Create Dockerfiles~~
+- ~~Create Docker-compose~~
+- ~~Create .env files~~
 
 ## Backend
 
