@@ -1,13 +1,16 @@
 name: qualicars-app
 services:
     backend:
-        build: ../backend
+        image: qualicars-backend/v1.0
+        build:
+            context: ../backend
         env_file:
             - ../backend/.env.properties
         environment:
             SPRING_PROFILES_ACTIVE: prod
 
     frontend:
+        image: qualicars-frontend/v1.0
         build: ../frontend
         ports:
             - "5173:5173"

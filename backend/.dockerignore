@@ -13,10 +13,8 @@
 .gradle
 gradle/wrapper/.gradle
 !gradle/wrapper/gradle-wrapper.jar
-build.gradle.kts.versions.toml # Exclude version catalog files if not needed in the final image
+build.gradle.kts.versions.toml
 *.lock
-
-src/
 
 tmp/
 logs/

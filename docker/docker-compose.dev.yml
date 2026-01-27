@@ -1,7 +1,7 @@
 name: qualicars-app-dev
 services:
     backend:
-        image: qualicars-backend/v1.0
+        image: qualicars-backend/dev
         build:
             context: ../backend
             dockerfile: Dockerfile.dev
@@ -15,7 +15,7 @@ services:
             - "8080:8080"
 
     frontend:
-        image: qualicars-frontend/v1.0
+        image: qualicars-frontend/dev
         build:
             context: ../frontend
             dockerfile: Dockerfile.dev
