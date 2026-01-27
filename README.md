@@ -25,9 +25,15 @@ docker compose -f docker/docker-compose.dev.yml up
 
 ## Backend
 
-Rate limiting
+### Eugene's
 
 HTTPS ready
+
+Security Headers
+
+Proper CORS
+
+LocalStorage JWT tokens
 
 HttpOnly JWT tokens
 - Expiring
@@ -35,8 +41,11 @@ HttpOnly JWT tokens
 - Authorization check on every endpoint
 - CSRF protection
 
-Security Headers
-Proper CORS
+### Loanne's
+
+Rate limiting
+
+Non-parameterized SQL insertion
 
 Parameterized SQL Insertion
 
@@ -44,8 +53,9 @@ Server-side Input Validation
 
 Password Hashing
 
-
 ## Frontend
+
+### Harry's
 
 Proper Input Validation
 
@@ -55,5 +65,6 @@ Search, Filtering, Sorting
 
 JWT
 - Logout support
+- Local Storage
 
 Security Headers
