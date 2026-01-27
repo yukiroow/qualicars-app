@@ -11,12 +11,12 @@ const CreationButtons = () => {
         )! as HTMLDialogElement;
         modal.showModal();
     };
-    const showTransactionForm = (): void => {
-        const modal = document.getElementById(
-            "transaction_modal",
-        )! as HTMLDialogElement;
-        modal.showModal();
-    };
+    // const showTransactionForm = (): void => {
+    //     const modal = document.getElementById(
+    //         "transaction_modal",
+    //     )! as HTMLDialogElement;
+    //     modal.showModal();
+    // };
     return (
         <div className="flex flex-col row-span-3 col-span-1 p-2">
             <div className="card w-full h-full bg-base-100 p-5 gap-5">

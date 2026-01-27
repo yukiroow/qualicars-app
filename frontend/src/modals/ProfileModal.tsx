@@ -10,13 +10,9 @@ const ProfileModal = ({ username, setLoading }: StateProps) => {
             setLoading!(true);
             await getRequest({
                 endpoint: `/agents/${username}`,
-            })
-                .then((data) => {
-                    setAgentData(data.responseData!.agent);
-                })
-                .catch((err) => {
-                    setLoading!(false);
-                });
+            }).then((data) => {
+                setAgentData(data.responseData!.agent);
+            });
 
             setLoading!(false);
         };
