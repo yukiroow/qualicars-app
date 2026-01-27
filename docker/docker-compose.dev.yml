@@ -1,3 +1,4 @@
+name: qualicars-app-dev
 services:
     backend:
         image: qualicars-backend/v1.0
