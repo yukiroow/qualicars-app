@@ -1,3 +1,10 @@
+# Important
+
+Don't push to main.
+```bash
+git switch dev
+```
+
 # How to setup development environment
 
 ```bash
