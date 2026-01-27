@@ -1,0 +1,27 @@
+services:
+    backend:
+        image: qualicars-backend/v1.0
+        build:
+            context: ../backend
+            dockerfile: Dockerfile.dev
+        volumes:
+            - ../backend:/app
+        env_file:
+            - ../backend/.env.properties
+        environment:
+            SPRING_PROFILES_ACTIVE: dev
+        ports:
+            - "8080:8080"
+
+    frontend:
+        image: qualicars-frontend/v1.0
+        build:
+            context: ../frontend
+            dockerfile: Dockerfile.dev
+        volumes:
+            - ../frontend:/app
+            - /app/node_modules
+        ports:
+            - "5173:5173"
+        environment:
+            - CHOKIDAR_USEPOLLING=true

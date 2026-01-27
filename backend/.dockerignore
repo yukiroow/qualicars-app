@@ -1,0 +1,23 @@
+.git
+.gitignore
+.svn
+.hg
+.idea
+.vscode
+**.iml
+
+/build/
+/out/
+/target/
+
+.gradle
+gradle/wrapper/.gradle
+!gradle/wrapper/gradle-wrapper.jar
+build.gradle.kts.versions.toml # Exclude version catalog files if not needed in the final image
+*.lock
+
+src/
+
+tmp/
+logs/
+*.log

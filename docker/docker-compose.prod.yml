@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+    backend:
+        build: ../backend
+        env_file:
+            - ../backend/.env.properties
+        environment:
+            SPRING_PROFILES_ACTIVE: prod
+
+    frontend:
+        build: ../frontend
+        ports:
+            - "5173:5173"
