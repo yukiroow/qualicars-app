@@ -1,3 +1,12 @@
+# How to setup development environment
+
+```bash
+# Build development environment
+docker compose -f docker/docker-compose.dev.yml build --no-cache
+# Run containers
+docker compose -f docker/docker-compose.dev.yml up
+```
+
 # TODO
 
 ## Environment
