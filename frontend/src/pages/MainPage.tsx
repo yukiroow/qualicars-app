@@ -12,6 +12,7 @@ import ProfileModal from "../modals/ProfileModal";
 import Spinner from "../components/Spinner";
 import NewVehicle from "../modals/NewVehicle";
 import NewCustomer from "../modals/NewCustomer";
+import NewTransaction from "../modals/NewTransaction.tsx";
 
 const MainPage = ({
     username,
@@ -33,6 +34,17 @@ const MainPage = ({
         !initState.customers ||
         !initState.vehicles ||
         !initState.transactions;
+    const [modalOpen, setModalOpen] = useState<{
+        profile: boolean;
+        transaction: boolean;
+        vehicle: boolean;
+        customer: boolean;
+    }>({
+        profile: false,
+        transaction: false,
+        vehicle: false,
+        customer: false,
+    });
 
     useEffect(() => {
         if (!username) {
@@ -42,6 +54,51 @@ const MainPage = ({
 
     return (
         <>
+            <main className="bg-base-300 grid grid-flow-col grid-cols-5 grid-rows-10 h-screen p-8">
+                <RecentSalesPanel
+                    username={username}
+                    setInitState={setInitState}
+                />
+                <CreationButtons setModalOpen={setModalOpen} />
+                <UserCard username={username} />
+                <CustomersPanel setInitState={setInitState} />
+                <VehiclesPanel setInitState={setInitState} />
+                <TransactionsPanel setInitState={setInitState} />
+
+                <NewCustomer
+                    setNotification={setNotification}
+                    setLoading={setLoading}
+                    setToastType={setToastType}
+                    setModalOpen={setModalOpen}
+                    modalOpen={modalOpen}
+                />
+                <NewVehicle
+                    setNotification={setNotification}
+                    setLoading={setLoading}
+                    setToastType={setToastType}
+                    setModalOpen={setModalOpen}
+                    modalOpen={modalOpen}
+                />
+                <NewTransaction
+                    setNotification={setNotification}
+                    setLoading={setLoading}
+                    setToastType={setToastType}
+                    setModalOpen={setModalOpen}
+                    modalOpen={modalOpen}
+                    username={username}
+                />
+                <ProfileModal
+                    username={username}
+                    setLoading={setLoading}
+                    setModalOpen={setModalOpen}
+                    modalOpen={modalOpen}
+                />
+                <LogoutModal
+                    setUsername={setUsername}
+                    setNotification={setNotification}
+                    setToastType={setToastType}
+                />
+            </main>
             {(initLoading || loading) && <Spinner />}
             {notification && setNotification && (
                 <NotificationToast
@@ -50,36 +107,6 @@ const MainPage = ({
                     setNotification={setNotification}
                 />
             )}
-            <main className="bg-base-300 grid grid-flow-col grid-cols-5 grid-rows-10 h-screen p-8">
-                <RecentSalesPanel
-                    username={username}
-                    setInitState={setInitState}
-                />
-                <CreationButtons />
-                <UserCard username={username} />
-                <CustomersPanel setInitState={setInitState} />
-                <VehiclesPanel setInitState={setInitState} />
-                <TransactionsPanel setInitState={setInitState} />
-                <NewCustomer
-                    setNotification={setNotification}
-                    setLoading={setLoading}
-                    setToastType={setToastType}
-                />
-                <NewVehicle
-                    setNotification={setNotification}
-                    setLoading={setLoading}
-                    setToastType={setToastType}
-                />
-                <ProfileModal
-                    username={username}
-                    setLoading={setLoading}
-                />
-                <LogoutModal
-                    setUsername={setUsername}
-                    setNotification={setNotification}
-                    setToastType={setToastType}
-                />
-            </main>
         </>
     );
 };

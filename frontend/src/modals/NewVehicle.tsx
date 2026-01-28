@@ -8,6 +8,7 @@ const NewVehicle = ({
     setNotification,
     setLoading,
     setToastType,
+    setModalOpen,
 }: StateProps) => {
     const [step, setStep] = useState(1);
     const [vehicleData, setVehicleData] = useState({
@@ -101,7 +102,15 @@ const NewVehicle = ({
         <dialog id="vehicle_modal" className="modal">
             <div className="modal-box">
                 <form method="dialog">
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                    <button
+                        onClick={() =>
+                            setModalOpen!((prev) => ({
+                                ...prev,
+                                transaction: false,
+                            }))
+                        }
+                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    >
                         ✕
                     </button>
                 </form>
@@ -124,7 +133,16 @@ const NewVehicle = ({
                 )}
             </div>
             <form method="dialog" className="modal-backdrop">
-                <button>close</button>
+                <button
+                    onClick={() =>
+                        setModalOpen!((prev) => ({
+                            ...prev,
+                            transaction: false,
+                        }))
+                    }
+                >
+                    close
+                </button>
             </form>
         </dialog>
     );

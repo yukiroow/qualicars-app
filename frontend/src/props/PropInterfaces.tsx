@@ -27,13 +27,15 @@ export interface TransactionObject {
 }
 
 export interface CustomerObject {
+    customer_id?: number;
     address: string;
     contact: string;
     name: string;
 }
 
 export interface VehicleObject {
-    available: boolean;
+    vehicle_id?: number;
+    available?: boolean;
     chassis_no: string;
     engine_no: string;
     color: string;
@@ -48,6 +50,7 @@ export interface RecentSalesObject {
         year: string;
     };
 }
+
 export interface AgentObject {
     address: string;
     agent_id: number;
@@ -84,11 +87,25 @@ export interface PanelProp {
 export interface StateProps {
     username?: string;
     notification?: string;
+    modalOpen?: {
+        profile: boolean;
+        transaction: boolean;
+        vehicle: boolean;
+        customer: boolean;
+    };
     setUsername?: Dispatch<SetStateAction<string>>;
     setPage?: Dispatch<SetStateAction<number>>;
     setNotification?: Dispatch<SetStateAction<string>>;
     setToastType?: Dispatch<SetStateAction<number>>;
     setLoading?: Dispatch<SetStateAction<boolean>>;
+    setModalOpen?: Dispatch<
+        SetStateAction<{
+            profile: boolean;
+            transaction: boolean;
+            vehicle: boolean;
+            customer: boolean;
+        }>
+    >;
 }
 
 export interface VehicleProp {
@@ -111,6 +128,34 @@ export interface VehicleProp {
     };
     validateFields?(): boolean;
 }
+
+export interface TransactionProp {
+    transactionData: {
+        vehicleId: number;
+        customerId: number;
+        agentId: number;
+        amount: number;
+    };
+    modalOpen?: {
+        profile: boolean;
+        transaction: boolean;
+        vehicle: boolean;
+        customer: boolean;
+    };
+    handleSubmit?(): void;
+    setLoading?: Dispatch<SetStateAction<boolean>>;
+    setNotification?: Dispatch<SetStateAction<string>>;
+    setStep: Dispatch<SetStateAction<number>>;
+    setTransactionData?: Dispatch<
+        SetStateAction<{
+            vehicleId: number;
+            customerId: number;
+            agentId: number;
+            amount: number;
+        }>
+    >;
+}
+
 export interface CustomerProp {
     customerData: {
         name: string;
@@ -124,22 +169,6 @@ export interface CustomerProp {
         nameErr: boolean;
         addressErr: boolean;
         contactErr: boolean;
-    };
-    validateFields?(): boolean;
-}
-export interface TransactionProp {
-    transactionData: {
-        vehicleId: string;
-        customerId: string;
-        amount: string;
-    };
-    setStep?: Dispatch<SetStateAction<number>>;
-    handleSubmit?(): void;
-    handleChange?(event: ChangeEvent<HTMLInputElement>): void;
-    errors?: {
-        vehicleErr: boolean;
-        customerErr: boolean;
-        amountErr: boolean;
     };
     validateFields?(): boolean;
 }

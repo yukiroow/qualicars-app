@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { AgentObject, StateProps } from "../props/PropInterfaces";
 import useApiFetch from "../hooks/useApiFetch";
 
-const ProfileModal = ({ username, setLoading }: StateProps) => {
+const ProfileModal = ({ username, setLoading, setModalOpen }: StateProps) => {
     const [agentData, setAgentData] = useState<AgentObject>();
     const { getRequest } = useApiFetch();
     useEffect(() => {
@@ -77,14 +77,31 @@ const ProfileModal = ({ username, setLoading }: StateProps) => {
                         </tr>
                     </thead>
                 </table>
-                <div className="modal-action">
+                <div
+                    onClick={() =>
+                        setModalOpen!((prev) => ({
+                            ...prev,
+                            transaction: false,
+                        }))
+                    }
+                    className="modal-action"
+                >
                     <form method="dialog">
                         <button className="btn">Close</button>
                     </form>
                 </div>
             </div>
             <form method="dialog" className="modal-backdrop">
-                <button>close</button>
+                <button
+                    onClick={() =>
+                        setModalOpen!((prev) => ({
+                            ...prev,
+                            transaction: false,
+                        }))
+                    }
+                >
+                    close
+                </button>
             </form>
         </dialog>
     );
