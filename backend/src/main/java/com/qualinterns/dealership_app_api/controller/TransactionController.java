@@ -72,6 +72,7 @@ public class TransactionController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (DataIntegrityViolationException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
             System.out.println(e.getMessage());
