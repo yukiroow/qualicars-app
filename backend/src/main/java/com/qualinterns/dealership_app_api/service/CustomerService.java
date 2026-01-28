@@ -27,6 +27,13 @@ public class CustomerService {
     }
 
     @Transactional
+    public List<Customer> getAllCustomersWithId() {
+        return customerRepo.findAll()
+                .stream()
+                .toList();
+    }
+
+    @Transactional
     public Optional<CustomerDto> getCustomerByName(@PathVariable String name) {
         return customerRepo.findByName(name)
                 .map(customerMapper::toDto);

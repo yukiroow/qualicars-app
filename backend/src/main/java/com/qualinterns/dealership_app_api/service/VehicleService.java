@@ -25,6 +25,11 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
+    public List<Vehicle> getAllAvailableVehicles() {
+        return vehicleRepo.findAll().stream().filter(Vehicle::isAvailable).toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<VehicleDto> getVehicleByMake(String make) {
         return vehicleRepo.findByMake(make)
                 .stream()
