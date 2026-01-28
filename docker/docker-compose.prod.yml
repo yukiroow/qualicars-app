@@ -7,7 +7,7 @@ services:
         env_file:
             - ../backend/.env.properties
         environment:
-            SPRING_PROFILES_ACTIVE: prod
+            - SPRING_PROFILES_ACTIVE: prod
 
     frontend:
         image: qualicars-frontend/v1.0
