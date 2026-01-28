@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -21,10 +22,15 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping
-    public ResponseEntity<HashMap<String, List<VehicleDto>>> getAllVehicles() {
+    public ResponseEntity<?> getAllVehicles(@RequestParam(name = "available", required = false) boolean available) {
         try {
-            var vehicles = vehicleService.getAllVehicle();
-            HashMap<String, List<VehicleDto>> response = new HashMap<>();
+            Object vehicles;
+            Map<String, Object> response = new HashMap<>();
+            if (available) {
+                vehicles = vehicleService.getAllAvailableVehicles();
+            } else {
+                vehicles = vehicleService.getAllVehicle();
+            }
             response.put("vehicles", vehicles);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
