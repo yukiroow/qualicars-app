@@ -59,7 +59,7 @@ Password Hashing
 
 Proper Input Validation
 
-Add Transaction Action
+~~Add Transaction Action~~
 
 Search, Filtering, Sorting
 
