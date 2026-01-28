@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -22,10 +23,15 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<HashMap<String, List<CustomerDto>>> getAllCustomers() {
+    public ResponseEntity<?> getAllCustomers(@RequestParam(name = "withId", required = false) boolean withId) {
         try {
-            var customers = customerService.getAllCustomers();
-            HashMap<String, List<CustomerDto>> response = new HashMap<>();
+            Object customers;
+            Map<String, Object> response = new HashMap<>();
+            if (withId) {
+                customers = customerService.getAllCustomersWithId();
+            } else {
+                customers = customerService.getAllCustomers();
+            }
             response.put("customers", customers);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
