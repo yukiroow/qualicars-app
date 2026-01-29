@@ -1,15 +1,19 @@
 import type { FormEvent } from "react";
 import type { TransactionProp } from "../props/PropInterfaces";
 
-const TransactionSelectVehicle = ({
+const TransactionSelectAmount = ({
     transactionData,
     setStep,
     setTransactionData,
     setNotification,
-    setLoading,
 }: TransactionProp) => {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (!transactionData.amount) {
+            setNotification!("Please enter a valid amount");
+            return;
+        }
 
         if (setStep) {
             setStep(4);
@@ -48,4 +52,4 @@ const TransactionSelectVehicle = ({
     );
 };
 
-export default TransactionSelectVehicle;
+export default TransactionSelectAmount;

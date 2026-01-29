@@ -139,7 +139,6 @@ const NewTransaction = ({
                             setStep={setStep}
                             setTransactionData={setTransactionData}
                             setNotification={setNotification}
-                            setLoading={setLoading}
                         />
                     ) : (
                         <TransactionFormSummary
