@@ -31,7 +31,7 @@ HTTPS ready
 
 Security Headers
 
-Proper CORS
+~~Proper CORS~~
 
 LocalStorage JWT tokens
 

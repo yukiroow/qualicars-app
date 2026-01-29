@@ -12,6 +12,7 @@ const useApiFetch = () => {
         try {
             const response = await fetch(`${serverUrl}${endpoint}`, {
                 method: "DELETE",
+                credentials: "include",
             });
             if (response.status === 200) {
                 const data = await response.json();
@@ -40,6 +41,7 @@ const useApiFetch = () => {
             const response = await fetch(`${serverUrl}${endpoint}`, {
                 method: "PUT",
                 body: JSON.stringify(payload),
+                credentials: "include",
             });
             if (response.status === 204) {
                 const data = await response.json();
@@ -68,6 +70,7 @@ const useApiFetch = () => {
             const response = await fetch(`${serverUrl}${endpoint}`, {
                 method: "POST",
                 body: payload,
+                credentials: "include",
             });
             return {
                 status: response.status,
@@ -85,6 +88,7 @@ const useApiFetch = () => {
         try {
             const response = await fetch(`${serverUrl}${endpoint}`, {
                 method: "GET",
+                credentials: "include",
             });
             if (response.status === 200) {
                 const data = await response.json();
