@@ -88,7 +88,7 @@ const NewTransaction = ({
             setLoading!(false);
         };
         fetchAgentId();
-    }, [modalOpen]);
+    }, [modalOpen?.transaction]);
 
     return (
         <dialog id="transaction_modal" className="modal">

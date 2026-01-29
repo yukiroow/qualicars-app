@@ -96,12 +96,17 @@ const NewCustomer = ({
             <div className="modal-box">
                 <form method="dialog">
                     <button
-                        onClick={() =>
+                        onClick={() => {
                             setModalOpen!((prev) => ({
                                 ...prev,
-                                transaction: false,
-                            }))
-                        }
+                                customer: false,
+                            }));
+                            setCustomerData({
+                                name: "",
+                                address: "",
+                                contact: "",
+                            });
+                        }}
                         className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                     >
                         ✕
@@ -127,12 +132,17 @@ const NewCustomer = ({
             </div>
             <form method="dialog" className="modal-backdrop">
                 <button
-                    onClick={() =>
+                    onClick={() => {
                         setModalOpen!((prev) => ({
                             ...prev,
                             transaction: false,
-                        }))
-                    }
+                        }));
+                        setCustomerData({
+                            name: "",
+                            address: "",
+                            contact: "",
+                        });
+                    }}
                 >
                     close
                 </button>

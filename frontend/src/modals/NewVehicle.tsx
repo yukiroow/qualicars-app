@@ -103,12 +103,19 @@ const NewVehicle = ({
             <div className="modal-box">
                 <form method="dialog">
                     <button
-                        onClick={() =>
+                        onClick={() => {
                             setModalOpen!((prev) => ({
                                 ...prev,
-                                transaction: false,
-                            }))
-                        }
+                                vehicle: false,
+                            }));
+                            setVehicleData({
+                                make: "",
+                                year: "",
+                                color: "",
+                                engineNo: "",
+                                chassisNo: "",
+                            });
+                        }}
                         className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                     >
                         ✕
@@ -134,12 +141,19 @@ const NewVehicle = ({
             </div>
             <form method="dialog" className="modal-backdrop">
                 <button
-                    onClick={() =>
+                    onClick={() => {
                         setModalOpen!((prev) => ({
                             ...prev,
                             transaction: false,
-                        }))
-                    }
+                        }));
+                        setVehicleData({
+                            make: "",
+                            year: "",
+                            color: "",
+                            engineNo: "",
+                            chassisNo: "",
+                        });
+                    }}
                 >
                     close
                 </button>
