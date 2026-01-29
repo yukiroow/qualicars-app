@@ -1,5 +1,6 @@
 package com.qualinterns.dealership_app_api.service;
 
+import com.qualinterns.dealership_app_api.dto.AgentChangePassword;
 import com.qualinterns.dealership_app_api.dto.AgentDto;
 import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
@@ -65,6 +66,15 @@ public class AgentService {
         }
         Agent updatedAgent = agentRepo.save(existingAgent);
         return agentMapper.toDto(updatedAgent);
+    }
+
+    @Transactional
+    public void updatePassword(String username, AgentChangePassword newAgentPassword) {
+        Agent existingAgent = agentRepo.findByUsername(username).orElse(null);
+        assert existingAgent != null;
+
+        existingAgent.setPassword(newAgentPassword.getPassword());
+        agentRepo.save(existingAgent);
     }
 
     @Transactional
