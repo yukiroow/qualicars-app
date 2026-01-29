@@ -1,6 +1,5 @@
 package com.qualinterns.dealership_app_api.service;
 
-import com.qualinterns.dealership_app_api.dto.AgentChangePassword;
 import com.qualinterns.dealership_app_api.dto.AgentDto;
 import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
@@ -8,6 +7,7 @@ import com.qualinterns.dealership_app_api.mapper.AgentMapper;
 import com.qualinterns.dealership_app_api.model.Agent;
 import com.qualinterns.dealership_app_api.repo.AgentRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +19,7 @@ import java.util.Optional;
 public class AgentService {
     private final AgentRepo agentRepo;
     private final AgentMapper agentMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<AgentDto> getAllAgents() {
@@ -37,6 +38,7 @@ public class AgentService {
     @Transactional
     public void createAgent(RegisterAgentRequest request) {
         var agent = agentMapper.toEntity(request);
+//        agent.setPassword(passwordEncoder.encode(agent.getPassword()));
         var savedAgent = agentRepo.save(agent);
         agentMapper.toDto(savedAgent);
     }
@@ -66,15 +68,6 @@ public class AgentService {
     }
 
     @Transactional
-    public void updatePassword(String username, AgentChangePassword newAgentPassword) {
-        Agent existingAgent = agentRepo.findByUsername(username).orElse(null);
-        assert existingAgent != null;
-
-        existingAgent.setPassword(newAgentPassword.getPassword());
-        agentRepo.save(existingAgent);
-    }
-
-    @Transactional
     public String login(AgentLoginRequest request) {
 
         var agent = agentRepo.findByUsername(request.getUsername()).orElse(null);
@@ -82,7 +75,10 @@ public class AgentService {
         if (agent != null && agent.getPassword().equals(request.getPassword())) {
             return "Login successful!";
         }
+
+//        if (agent != null && passwordEncoder.matches(request.getPassword(), agent.getPassword())) {
+//            return "Login successful!";
+//        }
         return "Invalid username or password";
     }
 }
-
