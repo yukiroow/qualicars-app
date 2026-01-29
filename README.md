@@ -36,9 +36,9 @@ Proper CORS
 LocalStorage JWT tokens
 
 HttpOnly JWT tokens
-- Expiring
-- Short-lived
-- Authorization check on every endpoint
+- ~~Expiring~~
+- ~~Short-lived~~
+- ~~Authorization check on every endpoint~~
 - CSRF protection
 
 ### Loanne's
