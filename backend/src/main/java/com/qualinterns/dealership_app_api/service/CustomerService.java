@@ -49,9 +49,17 @@ public class CustomerService {
     @Transactional
     public CustomerDto updateCustomer(int customerId, CustomerDto newCustomerDetails) {
         Customer existingCustomer = customerRepo.findById(customerId).orElse(null);
-        existingCustomer.setName(newCustomerDetails.getName());
-        existingCustomer.setContact(newCustomerDetails.getContact());
-        existingCustomer.setAddress(newCustomerDetails.getAddress());
+
+        assert existingCustomer != null;
+        if (!newCustomerDetails.getName().isEmpty()) {
+            existingCustomer.setName(newCustomerDetails.getName());
+        }
+        if (!newCustomerDetails.getContact().isEmpty()) {
+            existingCustomer.setContact(newCustomerDetails.getContact());
+        }
+        if (!newCustomerDetails.getAddress().isEmpty()) {
+            existingCustomer.setAddress(newCustomerDetails.getAddress());
+        }
         Customer updatedCustomer = customerRepo.save(existingCustomer);
         return customerMapper.toDto(updatedCustomer);
     }

@@ -1,5 +1,6 @@
 package com.qualinterns.dealership_app_api.controller;
 
+import com.qualinterns.dealership_app_api.dto.AgentChangePassword;
 import com.qualinterns.dealership_app_api.dto.AgentDto;
 import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
@@ -38,7 +39,7 @@ public class AgentController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<HashMap<String,Optional<AgentDto>>> getAgentByUsername(@PathVariable String username) {
+    public ResponseEntity<HashMap<String, Optional<AgentDto>>> getAgentByUsername(@PathVariable String username) {
         var agent = agentService.getAgentByUsername(username);
         if (agent.isEmpty()) {
             System.out.println("Agent not found");
@@ -63,11 +64,10 @@ public class AgentController {
         }
     }
 
-    @PatchMapping("/{agentId}")
-    public ResponseEntity<?> updateAgent(@PathVariable short agentId, @RequestBody @Validated AgentDto newAgentDetail) {
+    @PatchMapping(path = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateAgent(@PathVariable String username, @ModelAttribute @Validated AgentDto newAgentDetail) {
         try {
-            AgentDto updatedAgent = agentService.updateUsername(agentId, newAgentDetail);
-            System.out.println("Agent updated successfully");
+            AgentDto updatedAgent = agentService.updateAgent(username, newAgentDetail);
             return ResponseEntity.ok(updatedAgent);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -79,7 +79,22 @@ public class AgentController {
         }
     }
 
-    @PostMapping(path="/login", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(path = "/password/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updatePassword(@PathVariable String username, @ModelAttribute @Validated AgentChangePassword newAgentPassword) {
+        try {
+            agentService.updatePassword(username, newAgentPassword);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping(path = "/login", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> login(@ModelAttribute AgentLoginRequest request) {
 
         try {

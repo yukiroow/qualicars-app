@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -69,8 +68,8 @@ public class CustomerController {
         }
     }
 
-    @PatchMapping("/{customerId}")
-    public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @RequestBody CustomerDto newCustomerDetails) {
+    @PatchMapping(path="/{customerId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @ModelAttribute CustomerDto newCustomerDetails) {
         try {
             CustomerDto updatedCustomer = customerService.updateCustomer(customerId, newCustomerDetails);
             return ResponseEntity.ok(updatedCustomer);

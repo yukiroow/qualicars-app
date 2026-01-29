@@ -1,5 +1,6 @@
 package com.qualinterns.dealership_app_api.service;
 
+import com.qualinterns.dealership_app_api.dto.AgentChangePassword;
 import com.qualinterns.dealership_app_api.dto.AgentDto;
 import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
@@ -41,11 +42,36 @@ public class AgentService {
     }
 
     @Transactional
-    public AgentDto updateUsername(short agentId, AgentDto newAgentDetail) {
-        Agent existingAgent = agentRepo.findById(agentId).orElse(null);
-        existingAgent.setUsername(newAgentDetail.getUsername());
+    public AgentDto updateAgent(String username, AgentDto newAgentDetails) {
+        Agent existingAgent = agentRepo.findByUsername(username).orElse(null);
+        assert existingAgent != null;
+
+        if (!newAgentDetails.getFirst_name().isEmpty()) {
+            existingAgent.setFirst_name(newAgentDetails.getFirst_name());
+        }
+        if (!newAgentDetails.getLast_name().isEmpty()) {
+            existingAgent.setLast_name(newAgentDetails.getLast_name());
+        }
+        if (!newAgentDetails.getUsername().isEmpty()) {
+            existingAgent.setUsername(newAgentDetails.getUsername());
+        }
+        if (!newAgentDetails.getAddress().isEmpty()) {
+            existingAgent.setAddress(newAgentDetails.getAddress());
+        }
+        if (!newAgentDetails.getContact().isEmpty()) {
+            existingAgent.setContact(newAgentDetails.getContact());
+        }
         Agent updatedAgent = agentRepo.save(existingAgent);
         return agentMapper.toDto(updatedAgent);
+    }
+
+    @Transactional
+    public void updatePassword(String username, AgentChangePassword newAgentPassword) {
+        Agent existingAgent = agentRepo.findByUsername(username).orElse(null);
+        assert existingAgent != null;
+
+        existingAgent.setPassword(newAgentPassword.getPassword());
+        agentRepo.save(existingAgent);
     }
 
     @Transactional
