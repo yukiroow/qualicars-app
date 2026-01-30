@@ -1,13 +1,13 @@
 import type { StateProps } from "../props/PropInterfaces";
 
 const LogoutModal = ({
-    setUsername,
+    handleLogout,
     setNotification,
     setToastType,
 }: StateProps) => {
-    const onConfirm = (): void => {
+    const onConfirm = async () => {
         setToastType!(1);
-        setUsername!("");
+        handleLogout!();
         setNotification!("Logout Succcess");
     };
 

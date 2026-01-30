@@ -96,6 +96,8 @@ export interface StateProps {
         customer: boolean;
     };
     setUsername?: Dispatch<SetStateAction<string>>;
+    handleLoginSuccess?(name: string): void;
+    handleLogout?(): void;
     setPage?: Dispatch<SetStateAction<number>>;
     setNotification?: Dispatch<SetStateAction<string>>;
     setToastType?: Dispatch<SetStateAction<number>>;

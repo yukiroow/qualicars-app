@@ -4,7 +4,7 @@ import MainPage from "./pages/MainPage";
 import useCredentials from "./hooks/useCredentials";
 
 function App() {
-    const { username, setUsername } = useCredentials();
+    const { username, handleLoginSuccess, handleLogout } = useCredentials();
     const [page, setPage] = useState(0);
     const [notification, setNotification] = useState("");
 
@@ -14,7 +14,7 @@ function App() {
                 <LoginPage
                     username={username}
                     notification={notification}
-                    setUsername={setUsername}
+                    handleLoginSuccess={handleLoginSuccess}
                     setPage={setPage}
                     setNotification={setNotification}
                 />
@@ -27,7 +27,7 @@ function App() {
             <MainPage
                 username={username}
                 notification={notification}
-                setUsername={setUsername}
+                handleLogout={handleLogout}
                 setPage={setPage}
                 setNotification={setNotification}
             />

@@ -17,7 +17,7 @@ import NewTransaction from "../modals/NewTransaction.tsx";
 const MainPage = ({
     username,
     notification,
-    setUsername,
+    handleLogout,
     setPage,
     setNotification,
 }: StateProps) => {
@@ -94,7 +94,7 @@ const MainPage = ({
                     modalOpen={modalOpen}
                 />
                 <LogoutModal
-                    setUsername={setUsername}
+                    handleLogout={handleLogout}
                     setNotification={setNotification}
                     setToastType={setToastType}
                 />

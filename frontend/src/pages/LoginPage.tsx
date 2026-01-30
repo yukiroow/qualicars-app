@@ -13,7 +13,7 @@ import useApiFetch from "../hooks/useApiFetch";
 const LoginPage = ({
     username,
     notification,
-    setUsername,
+    handleLoginSuccess,
     setPage,
     setNotification,
 }: StateProps) => {
@@ -89,7 +89,7 @@ const LoginPage = ({
         });
         switch (response.status) {
             case 200:
-                setUsername!(credentials.username);
+                handleLoginSuccess!(credentials.username);
                 setPage!(1);
                 setLoading(false);
                 break;

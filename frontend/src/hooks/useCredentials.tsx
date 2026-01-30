@@ -1,17 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+const serverUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 const useCredentials = () => {
-    const [username, setUsername] = useState<string>((): string => {
+    const [username, setUsername] = useState<string>(() => {
         return localStorage.getItem("username") || "";
     });
 
-    useEffect(() => {
-        if (username) {
-            localStorage.setItem("username", username);
-        }
-    }, [username]);
+    const handleLoginSuccess = (name: string) => {
+        setUsername(name);
+        localStorage.setItem("username", name);
+    };
 
-    return { username, setUsername };
+    const handleLogout = async () => {
+        try {
+            setUsername("");
+            localStorage.removeItem("username");
+            await fetch(`${serverUrl}/agents/logout`, {
+                method: "POST",
+                credentials: "include",
+            });
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
+    return { username, handleLoginSuccess, handleLogout };
 };
 
 export default useCredentials;
