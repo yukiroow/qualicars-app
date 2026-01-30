@@ -10,51 +10,48 @@ import { useEffect, useState } from "react";
 const TransactionsPanel = ({ setInitState }: PanelProp) => {
     const { getRequest } = useApiFetch();
     const [transactions, setTransactions] = useState<TransactionObject[]>();
+    const [page, setPage] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>();
+
     useEffect(() => {
         const fetchData = async () => {
+            setInitState((prev) => ({ ...prev, transactions: false }));
             const response: ApiResponse = await getRequest({
-                endpoint: "/transactions",
+                endpoint: `/transactions?page=${page}&size=20`,
             });
-            if (response.status !== 200) {
-                setInitState((prev) => ({
-                    ...prev,
-                    transactions: false,
-                }));
-                return;
+            if (response.status === 200 && response.responseData) {
+                setTransactions(response.responseData.transactions);
+                setTotalPages(response.responseData.totalPages);
+                setInitState((prev) => ({ ...prev, transactions: true }));
             }
-            if (!response.responseData) {
-                setInitState((prev) => ({
-                    ...prev,
-                    transactions: false,
-                }));
-                return;
-            }
-            setTransactions(response.responseData.transactions);
-            setInitState((prev) => ({
-                ...prev,
-                transactions: true,
-            }));
         };
 
         fetchData();
-    }, []);
+    }, [page]);
     return (
         <div className="row-span-10 col-span-2 p-2">
             <div className="card w-full h-full  bg-base-100 p-2 pl-5">
                 <div className="flex flex-row gap-2">
                     <h1 className="text-primary text-xl">All transactions</h1>
-                    <button
-                        className="btn btn-square p-1 size-6 tooltip tooltip-info ml-auto"
-                        data-tip="Filter view"
-                    >
-                        F
-                    </button>
-                    <button
-                        className="btn btn-square p-1 size-6 tooltip tooltip-info"
-                        data-tip="Sort"
-                    >
-                        S
-                    </button>
+                    <div className="join ml-auto">
+                        <button
+                            className="join-item btn btn-sm"
+                            disabled={page === 0}
+                            onClick={() => setPage((p) => p - 1)}
+                        >
+                            «
+                        </button>
+                        <button className="join-item btn btn-sm">
+                            {page! + 1}
+                        </button>
+                        <button
+                            className="join-item btn btn-sm"
+                            disabled={page! >= totalPages! - 1}
+                            onClick={() => setPage((p) => p! + 1)}
+                        >
+                            »
+                        </button>
+                    </div>
                 </div>
                 <div className="overflow-y-auto h-full">
                     <table className="table table-pin-rows overflow-y-auto outline-none">

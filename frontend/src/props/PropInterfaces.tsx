@@ -68,6 +68,8 @@ export interface ApiResponse {
         customers?: CustomerObject[];
         vehicles?: VehicleObject[];
         agent?: AgentObject;
+        currentPage?: number;
+        totalPages?: number;
     };
     status: number;
 }

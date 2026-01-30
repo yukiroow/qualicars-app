@@ -8,46 +8,48 @@ import useApiFetch from "../hooks/useApiFetch";
 
 const CustomersPanel = ({ setInitState }: PanelProp) => {
     const [customersData, setCustomersData] = useState<CustomerObject[]>();
+    const [page, setPage] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>();
     const { getRequest } = useApiFetch();
     useEffect(() => {
         const fetchData = async () => {
+            setInitState((prev) => ({ ...prev, customers: false }));
             const response: ApiResponse = await getRequest({
-                endpoint: "/customers",
+                endpoint: `/customers?available=true&page=${page}&size=50`,
             });
-            if (response.status !== 200) {
-                setInitState((prev) => ({
-                    ...prev,
-                    customers: false,
-                }));
-                return;
+            if (response.status === 200 && response.responseData) {
+                setCustomersData(response.responseData.customers);
+                setTotalPages(response.responseData.totalPages);
+                setInitState((prev) => ({ ...prev, customers: true }));
             }
-            if (!response.responseData) {
-                setInitState((prev) => ({
-                    ...prev,
-                    customers: false,
-                }));
-                return;
-            }
-            setCustomersData(response.responseData.customers);
-            setInitState((prev) => ({
-                ...prev,
-                customers: true,
-            }));
         };
 
         fetchData();
-    }, []);
+    }, [page]);
     return (
         <div className="row-span-5 col-span-2 p-2">
             <div className="card w-full h-full  bg-base-100 p-2 pl-5">
                 <div className="flex flex-row">
                     <h1 className="text-primary text-xl">Customers</h1>
-                    <button
-                        className="btn btn-square p-1 size-6 tooltip tooltip-info ml-auto"
-                        data-tip="Sort"
-                    >
-                        S
-                    </button>
+                    <div className="join ml-auto">
+                        <button
+                            className="join-item btn btn-sm"
+                            disabled={page === 0}
+                            onClick={() => setPage((p) => p - 1)}
+                        >
+                            «
+                        </button>
+                        <button className="join-item btn btn-sm">
+                            {page! + 1}
+                        </button>
+                        <button
+                            className="join-item btn btn-sm"
+                            disabled={page! >= totalPages! - 1}
+                            onClick={() => setPage((p) => p! + 1)}
+                        >
+                            »
+                        </button>
+                    </div>
                 </div>
                 <div className="overflow-y-auto h-full">
                     <table className="table table-pin-rows outline-none">
