@@ -44,16 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             String newToken = tokenProvider.generateToken(username);
                             int maxAge = tokenProvider.getJwtExpirationSeconds();
 
-                            Cookie refreshCookie = new Cookie(JWT_COOKIE_NAME, newToken);
-                            refreshCookie.setHttpOnly(true);
-                            refreshCookie.setPath("/");
-                            refreshCookie.setMaxAge(maxAge);
-                            response.addCookie(refreshCookie);
-
                             StringBuilder cookieHeader = new StringBuilder();
                             cookieHeader.append(JWT_COOKIE_NAME).append("=").append(newToken)
                                     .append("; Path=/; HttpOnly; Max-Age=").append(maxAge)
-                                    .append("; SameSite=Lax");
+                                    .append("; SameSite=Strict");
                             if (request.isSecure()) {
                                 cookieHeader.append("; Secure");
                             }
