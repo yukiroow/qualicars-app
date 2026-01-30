@@ -8,6 +8,7 @@ import com.qualinterns.dealership_app_api.mapper.AgentMapper;
 import com.qualinterns.dealership_app_api.model.Agent;
 import com.qualinterns.dealership_app_api.repo.AgentRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class AgentService {
     private final AgentRepo agentRepo;
     private final AgentMapper agentMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<AgentDto> getAllAgents() {
@@ -37,6 +39,7 @@ public class AgentService {
     @Transactional
     public void createAgent(RegisterAgentRequest request) {
         var agent = agentMapper.toEntity(request);
+//        agent.setPassword(passwordEncoder.encode(agent.getPassword()));
         var savedAgent = agentRepo.save(agent);
         agentMapper.toDto(savedAgent);
     }
@@ -82,7 +85,10 @@ public class AgentService {
         if (agent != null && agent.getPassword().equals(request.getPassword())) {
             return "Login successful!";
         }
+
+//        if (agent != null && passwordEncoder.matches(request.getPassword(), agent.getPassword())) {
+//            return "Login successful!";
+//        }
         return "Invalid username or password";
     }
 }
-
