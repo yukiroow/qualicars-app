@@ -45,7 +45,7 @@ const VehicleForm = ({
                 maxLength={4}
                 value={vehicleData.year}
                 onChange={handleChange}
-                placeholder={`Ex. 2025 (2008 to ${new Date().getFullYear()}`}
+                placeholder={`Ex. 2025 (2008 to ${new Date().getFullYear()})`}
             />
 
             <label className="label">Color</label>
