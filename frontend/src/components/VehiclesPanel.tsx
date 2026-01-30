@@ -12,7 +12,7 @@ const VehiclesPanel = ({ setInitState }: PanelProp) => {
     useEffect(() => {
         const fetchData = async () => {
             const response: ApiResponse = await getRequest({
-                endpoint: "/vehicles",
+                endpoint: "/vehicles?available=true",
             });
             if (response.status !== 200) {
                 setInitState((prev) => ({
