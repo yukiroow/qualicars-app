@@ -64,7 +64,8 @@ Password Hashing
 ~~Pagination of large lists~~
 
 JWT
-- Logout support
+- ~~Logout support~~
+- ~~HttpOnly version~~
 - Local Storage
 
-Security Headers
+~~Security Headers~~
