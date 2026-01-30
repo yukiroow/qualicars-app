@@ -5,7 +5,9 @@ import com.qualinterns.dealership_app_api.dto.AgentDto;
 import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
 import com.qualinterns.dealership_app_api.service.AgentService;
+import com.qualinterns.dealership_app_api.util.JwtTokenProvider;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class AgentController {
 
     private final AgentService agentService;
+    private final JwtTokenProvider tokenProvider;
 
     @GetMapping
     public ResponseEntity<HashMap<String, List<AgentDto>>> getAllAgents() {
@@ -94,19 +97,53 @@ public class AgentController {
         }
     }
 
-    @PostMapping(path = "/login", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> login(@ModelAttribute AgentLoginRequest request) {
-
+    @PostMapping(path="/login", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> login(@ModelAttribute AgentLoginRequest request, HttpServletResponse response) {
         try {
-            var loginRequest = agentService.login(request);
+            var loginResult = agentService.login(request);
 
-            if (loginRequest.equals("Login successful!")) {
-                return ResponseEntity.ok(loginRequest);
+            if (loginResult.equals("Login successful!")) {
+
+                String jwtToken = tokenProvider.generateToken(request.getUsername());
+
+                response.addCookie(createHttpOnlyJwtCookie(jwtToken));
+
+                return ResponseEntity.ok().body(loginResult);
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginRequest);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PostMapping(path="/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        try {
+            response.addCookie(createExpiredJwtCookie());
+            return ResponseEntity.ok().body("Logout successful!");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private jakarta.servlet.http.Cookie createHttpOnlyJwtCookie(String token) {
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("jwtToken", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600);
+        cookie.setAttribute("SameSite", "Strict");
+        return cookie;
+    }
+
+    private jakarta.servlet.http.Cookie createExpiredJwtCookie() {
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("jwtToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Expire immediately
+        return cookie;
     }
 }
