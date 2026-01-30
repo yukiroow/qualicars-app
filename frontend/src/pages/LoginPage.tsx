@@ -83,12 +83,15 @@ const LoginPage = ({
         formData.append("username", credentials.username);
         formData.append("password", credentials.password);
 
-        const response: ApiResponse = await postRequest({
-            endpoint: "/agents/login",
-            payload: formData,
-        });
+        const response: ApiResponse = await postRequest({ endpoint: "/agents/login", payload: formData });
         switch (response.status) {
             case 200:
+                if (response.responseData && (response.responseData as any).token) {
+                    const token = (response.responseData as any).token as string;
+                    const expirationTime = Date.now() + 3600 * 1000;
+                    localStorage.setItem("jwtToken", token);
+                    localStorage.setItem("jwtTokenExpiration", expirationTime.toString());
+                }
                 handleLoginSuccess!(credentials.username);
                 setPage!(1);
                 setLoading(false);

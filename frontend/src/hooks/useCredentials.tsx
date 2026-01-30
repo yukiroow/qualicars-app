@@ -15,9 +15,10 @@ const useCredentials = () => {
         try {
             setUsername("");
             localStorage.removeItem("username");
+            localStorage.removeItem("jwtToken");
+            localStorage.removeItem("jwtTokenExpiration");
             await fetch(`${serverUrl}/agents/logout`, {
                 method: "POST",
-                credentials: "include",
             });
         } catch (error) {
             console.error("Logout failed:", error);

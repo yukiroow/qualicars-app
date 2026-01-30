@@ -28,36 +28,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
-            String token = extractTokenFromCookie(request);
+            String token = extractTokenFromRequest(request);
 
-            if (token != null) {
-                if (tokenProvider.validateToken(token)) {
-                    String username = tokenProvider.getUsernameFromToken(token);
+            if (token != null && tokenProvider.validateToken(token)) {
+                String username = tokenProvider.getUsernameFromToken(token);
 
-                    if (username != null) {
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(username, null, java.util.Collections.emptyList());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        log.debug("Set Spring Security authentication for user: {}", username);
-                        try {
-                            String newToken = tokenProvider.generateToken(username);
-                            int maxAge = tokenProvider.getJwtExpirationSeconds();
-
-                            StringBuilder cookieHeader = new StringBuilder();
-                            cookieHeader.append(JWT_COOKIE_NAME).append("=").append(newToken)
-                                    .append("; Path=/; HttpOnly; Max-Age=").append(maxAge)
-                                    .append("; SameSite=Strict");
-                            if (request.isSecure()) {
-                                cookieHeader.append("; Secure");
-                            }
-                            response.addHeader("Set-Cookie", cookieHeader.toString());
-                        } catch (Exception e) {
-                            log.warn("Failed to refresh JWT cookie: {}", e.getMessage());
-                        }
-                    }
-                } else {
-                    log.warn("JWT token validation failed");
+                if (username != null) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(username, null, java.util.Collections.emptyList());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.debug("Set Spring Security authentication for user: {}", username);
                 }
             }
         } catch (Exception e) {
@@ -68,7 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String extractTokenFromCookie(HttpServletRequest request) {
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
