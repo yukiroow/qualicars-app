@@ -27,9 +27,9 @@ docker compose -f docker/docker-compose.dev.yml up
 
 ### Eugene's
 
-HTTPS ready
+~~HTTPS ready~~
 
-Security Headers
+~~Security Headers~~
 
 ~~Proper CORS~~
 
