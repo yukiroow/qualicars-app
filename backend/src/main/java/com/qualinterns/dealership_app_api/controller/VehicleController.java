@@ -1,7 +1,6 @@
 package com.qualinterns.dealership_app_api.controller;
 
 import com.qualinterns.dealership_app_api.dto.VehicleDto;
-import com.qualinterns.dealership_app_api.model.Vehicle;
 import com.qualinterns.dealership_app_api.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -28,9 +27,9 @@ public class VehicleController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllVehicles(@RequestParam(name = "available", required = false) boolean available,
                                                               @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "20") int size) {
+                                                              @RequestParam int size) {
         try {
-            Pageable pageable = PageRequest.of(page, size);
+            Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size);
             Page<?> vehicles;
             Map<String, Object> response = new HashMap<>();
             if (available) {

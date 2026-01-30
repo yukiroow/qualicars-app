@@ -5,10 +5,13 @@ import com.qualinterns.dealership_app_api.service.CustomerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,16 +25,21 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<?> getAllCustomers(@RequestParam(name = "withId", required = false) boolean withId) {
+    public ResponseEntity<Map<String, Object>> getAllCustomers(@RequestParam(name = "withId", required = false) boolean withId,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam int size) {
         try {
-            Object customers;
+            Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size);
+            Page<?> customers;
             Map<String, Object> response = new HashMap<>();
             if (withId) {
-                customers = customerService.getAllCustomersWithId();
+                customers = customerService.getAllCustomersWithId(pageable);
             } else {
-                customers = customerService.getAllCustomers();
+                customers = customerService.getAllCustomers(pageable);
             }
-            response.put("customers", customers);
+            response.put("customers", customers.getContent());
+            response.put("currentPage", customers.getNumber());
+            response.put("totalPages", customers.getTotalPages());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -68,7 +76,7 @@ public class CustomerController {
         }
     }
 
-    @PatchMapping(path="/{customerId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(path = "/{customerId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @ModelAttribute CustomerDto newCustomerDetails) {
         try {
             CustomerDto updatedCustomer = customerService.updateCustomer(customerId, newCustomerDetails);
