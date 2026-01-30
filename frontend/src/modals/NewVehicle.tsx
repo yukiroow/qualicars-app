@@ -1,8 +1,9 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import VehicleFormSummary from "../components/VehicleFormSummary";
 import type { ApiResponse, StateProps } from "../props/PropInterfaces";
 import VehicleForm from "../forms/VehicleForm";
 import useApiFetch from "../hooks/useApiFetch";
+import { handleChangeInput } from "../util/utils";
 
 const NewVehicle = ({
     setNotification,
@@ -27,19 +28,14 @@ const NewVehicle = ({
         chassisErr: false,
     });
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        const { name, value } = event.target;
-        setVehicleData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
     const validateFields = (): boolean => {
+        const currYear = new Date().getFullYear();
+        const fieldYear = Number(vehicleData.year);
         const newErrors = {
-            makeErr: !vehicleData.make,
-            colorErr: !vehicleData.color,
-            yearErr: !vehicleData.year,
+            makeErr: !vehicleData.make.trim(),
+            colorErr: !vehicleData.color.trim(),
+            yearErr:
+                !vehicleData.year || (fieldYear > currYear && fieldYear < 2008),
             engineErr: !vehicleData.engineNo,
             chassisErr: !vehicleData.chassisNo,
         };
@@ -128,7 +124,9 @@ const NewVehicle = ({
                         errors={errors}
                         vehicleData={vehicleData}
                         setStep={setStep}
-                        handleChange={handleChange}
+                        handleChange={(event) =>
+                            handleChangeInput(event, undefined, setVehicleData)
+                        }
                         validateFields={validateFields}
                     />
                 ) : (

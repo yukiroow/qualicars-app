@@ -1,9 +1,9 @@
 import { useState } from "react";
-import type { ChangeEvent } from "react";
 import CustomerFormSummary from "../components/CustomerFormSummary";
 import CustomerForm from "../forms/CustomerForm";
 import type { ApiResponse, StateProps } from "../props/PropInterfaces";
 import useApiFetch from "../hooks/useApiFetch";
+import { handleChangeInput } from "../util/utils";
 
 const NewCustomer = ({
     setNotification,
@@ -23,19 +23,10 @@ const NewCustomer = ({
         contactErr: false,
     });
     const { postRequest } = useApiFetch();
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        const { name, value } = event.target;
-        setCustomerData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
     const validateFields = (): boolean => {
         const newErrors = {
-            nameErr: !customerData.name,
-            addressErr: !customerData.address,
+            nameErr: !customerData.name.trim(),
+            addressErr: !customerData.address.trim(),
             contactErr: !customerData.contact,
         };
 
@@ -72,7 +63,7 @@ const NewCustomer = ({
                 setToastType!(1);
                 setNotification!("Customer Adding Success");
                 modal.close();
-                break;
+                break;  
             case 409:
                 setToastType!(0);
                 setNotification!(
@@ -119,7 +110,9 @@ const NewCustomer = ({
                         errors={errors}
                         customerData={customerData}
                         setStep={setStep}
-                        handleChange={handleChange}
+                        handleChange={(event) =>
+                            handleChangeInput(event, setCustomerData)
+                        }
                         validateFields={validateFields}
                     />
                 ) : (

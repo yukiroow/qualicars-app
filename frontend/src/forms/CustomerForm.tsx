@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import type { CustomerProp } from "../props/PropInterfaces";
+import { handleBlur } from "../util/utils";
 const CustomerForm = ({
     customerData,
     setStep,
@@ -32,7 +33,8 @@ const CustomerForm = ({
                 maxLength={30}
                 value={customerData.name}
                 onChange={handleChange}
-                placeholder="Enter full name of Customer"
+                onBlur={handleBlur}
+                placeholder="Ex. Juan Dela Cruz"
             />
 
             <label className="label">Address</label>
@@ -43,7 +45,8 @@ const CustomerForm = ({
                 maxLength={255}
                 value={customerData.address}
                 onChange={handleChange}
-                placeholder="Enter address of Customer"
+                onBlur={handleBlur}
+                placeholder="Ex. 67 Barangay 420, Menela City"
             />
 
             <label className="label">Contact Number</label>
@@ -54,7 +57,7 @@ const CustomerForm = ({
                 maxLength={20}
                 value={customerData.contact}
                 onChange={handleChange}
-                placeholder="Enter contact number of Customer"
+                placeholder="Ex. 09123456789"
             />
             <button type="submit" className="btn btn-primary mt-4">
                 Next
