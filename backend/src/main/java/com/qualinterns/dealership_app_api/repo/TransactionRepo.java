@@ -1,6 +1,8 @@
 package com.qualinterns.dealership_app_api.repo;
 
 import com.qualinterns.dealership_app_api.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -16,6 +18,6 @@ public interface TransactionRepo extends JpaRepository<Transaction, Integer> {
             "JOIN FETCH t.agent " +
             "JOIN FETCH t.customer " +
             "ORDER BY t.date DESC ")
-    List<Transaction> findAllTransactions();
+    Page<Transaction> findAllTransactions(Pageable pageable);
 
 }
