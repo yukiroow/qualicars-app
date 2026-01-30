@@ -39,7 +39,6 @@ HttpOnly JWT tokens
 - ~~Expiring~~
 - ~~Short-lived~~
 - ~~Authorization check on every endpoint~~
-- CSRF protection
 
 ### Loanne's
 
