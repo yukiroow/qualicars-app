@@ -5,10 +5,13 @@ import com.qualinterns.dealership_app_api.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +25,21 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping
-    public ResponseEntity<?> getAllVehicles(@RequestParam(name = "available", required = false) boolean available) {
+    public ResponseEntity<Map<String, Object>> getAllVehicles(@RequestParam(name = "available", required = false) boolean available,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam int size) {
         try {
-            Object vehicles;
+            Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size);
+            Page<?> vehicles;
             Map<String, Object> response = new HashMap<>();
             if (available) {
-                vehicles = vehicleService.getAllAvailableVehicles();
+                vehicles = vehicleService.getAllAvailableVehicles(pageable);
             } else {
-                vehicles = vehicleService.getAllVehicle();
+                vehicles = vehicleService.getAllVehicles(pageable);
             }
-            response.put("vehicles", vehicles);
+            response.put("vehicles", vehicles.getContent());
+            response.put("currentPage", vehicles.getNumber());
+            response.put("totalPages", vehicles.getTotalPages());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println(e.getMessage());

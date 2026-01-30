@@ -61,7 +61,7 @@ Proper Input Validation
 
 ~~Add Transaction Action~~
 
-Search, Filtering, Sorting
+~~Pagination of large lists~~
 
 JWT
 - Logout support

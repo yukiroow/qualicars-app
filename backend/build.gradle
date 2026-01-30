@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.qualinterns'
 version = '0.0.1-SNAPSHOT'
-description = 'Training Session 2 API'
+description = 'Training Session 3 API'
 
 java {
 	toolchain {

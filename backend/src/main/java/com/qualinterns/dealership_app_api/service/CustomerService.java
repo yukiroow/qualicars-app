@@ -5,6 +5,8 @@ import com.qualinterns.dealership_app_api.mapper.CustomerMapper;
 import com.qualinterns.dealership_app_api.model.Customer;
 import com.qualinterns.dealership_app_api.repo.CustomerRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,18 +21,14 @@ public class CustomerService {
     private final CustomerMapper customerMapper;
 
     @Transactional
-    public List<CustomerDto> getAllCustomers() {
-        return customerRepo.findAll()
-                .stream()
-                .map(customerMapper::toDto)
-                .toList();
+    public Page<CustomerDto> getAllCustomers(Pageable pageable) {
+        return customerRepo.findAll(pageable)
+                .map(customerMapper::toDto);
     }
 
     @Transactional
-    public List<Customer> getAllCustomersWithId() {
-        return customerRepo.findAll()
-                .stream()
-                .toList();
+    public Page<Customer> getAllCustomersWithId(Pageable pageable) {
+        return customerRepo.findAll(pageable);
     }
 
     @Transactional

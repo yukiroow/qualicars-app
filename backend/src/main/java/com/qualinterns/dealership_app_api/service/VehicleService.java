@@ -5,6 +5,8 @@ import com.qualinterns.dealership_app_api.mapper.VehicleMapper;
 import com.qualinterns.dealership_app_api.model.Vehicle;
 import com.qualinterns.dealership_app_api.repo.VehicleRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +19,14 @@ public class VehicleService {
     private final VehicleMapper vehicleMapper;
 
     @Transactional(readOnly = true)
-    public List<VehicleDto> getAllVehicle() {
-        return vehicleRepo.findAll()
-                .stream()
-                .map(vehicleMapper::toDto)
-                .toList();
+    public Page<VehicleDto> getAllVehicles(Pageable pageable) {
+        return vehicleRepo.findAll(pageable)
+                .map(vehicleMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public List<Vehicle> getAllAvailableVehicles() {
-        return vehicleRepo.findAll().stream().filter(Vehicle::isAvailable).toList();
+    public Page<Vehicle> getAllAvailableVehicles(Pageable pageable) {
+        return vehicleRepo.findByAvailableTrue(pageable);
     }
 
     @Transactional(readOnly = true)

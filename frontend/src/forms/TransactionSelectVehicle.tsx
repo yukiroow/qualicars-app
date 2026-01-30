@@ -19,7 +19,7 @@ const TransactionSelectVehicle = ({
         const fetchAvailableVehicles = async () => {
             setLoading!(true);
             const response = await getRequest({
-                endpoint: "/vehicles?available=true",
+                endpoint: "/vehicles?available=true&page=0&size=0",
             });
             if (response.status !== 200) {
                 return;
@@ -39,7 +39,6 @@ const TransactionSelectVehicle = ({
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
 
         if (!transactionData.vehicleId) {
             setNotification!("Please select a vehicle first!");

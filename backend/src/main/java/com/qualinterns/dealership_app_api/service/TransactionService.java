@@ -11,8 +11,11 @@ import com.qualinterns.dealership_app_api.repo.CustomerRepo;
 import com.qualinterns.dealership_app_api.repo.TransactionRepo;
 import com.qualinterns.dealership_app_api.repo.VehicleRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -27,22 +30,20 @@ public class TransactionService {
 
     // Optimized Query
     @Transactional(readOnly = true)
-    public List<TransactionDto> getAllTransactions() {
-        return transactionRepo.findAllTransactions()
-                .stream()
-                .map(transactionMapper::toDto)
-                .toList();
+    public Page<TransactionDto> getAllTransactions(Pageable pageable) {
+        return transactionRepo.findAllTransactions(pageable)
+                .map(transactionMapper::toDto);
     }
 
     // Unoptimized Query
-    @Transactional(readOnly = true)
-    public List<TransactionDto> getAllTransaction() {
-        return transactionRepo.findAll()
-                .stream()
-                .map(transactionMapper::toDto)
-                .toList();
-
-    }
+//    @Transactional(readOnly = true)
+//    public List<TransactionDto> getAllTransaction() {
+//        return transactionRepo.findAll()
+//                .stream()
+//                .map(transactionMapper::toDto)
+//                .toList();
+//
+//    }
 
     @Transactional
     public void createTransaction(RegisterTransactionRequest request) {

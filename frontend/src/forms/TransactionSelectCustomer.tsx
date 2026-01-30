@@ -15,7 +15,7 @@ const TransactionSelectVehicle = ({
         const fetchCustomers = async () => {
             setLoading!(true);
             const response = await getRequest({
-                endpoint: "/customers?withId=true",
+                endpoint: "/customers?withId=true&page=0&size=0",
             });
             if (response.status !== 200) {
                 return;

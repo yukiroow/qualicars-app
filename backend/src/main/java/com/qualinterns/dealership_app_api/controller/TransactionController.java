@@ -6,6 +6,8 @@ import com.qualinterns.dealership_app_api.dto.TransactionDto;
 import com.qualinterns.dealership_app_api.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,25 +24,16 @@ public class TransactionController {
 
     private TransactionService transactionService;
 
-    @GetMapping("/slow")
-    public ResponseEntity<Map<String, List<TransactionDto>>> getAllTransaction() {
-        try {
-            var transactions = transactionService.getAllTransaction();
-            HashMap<String, List<TransactionDto>> response = new HashMap<>();
-            response.put("transactions", transactions);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
     @GetMapping
-    public ResponseEntity<Map<String, List<TransactionDto>>> getAllTransactions() {
+    public ResponseEntity<Map<String, Object>> getAllTransaction(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "50") int size) {
         try {
-            var transactions = transactionService.getAllTransactions();
-            HashMap<String, List<TransactionDto>> response = new HashMap<>();
-            response.put("transactions", transactions);
+            Pageable pageable = PageRequest.of(page, size);
+            var transactions = transactionService.getAllTransactions(pageable);
+            Map<String, Object> response = new HashMap<>();
+            response.put("transactions", transactions.getContent());
+            response.put("currentPage", transactions.getNumber());
+            response.put("totalPages", transactions.getTotalPages());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println(e.getMessage());
