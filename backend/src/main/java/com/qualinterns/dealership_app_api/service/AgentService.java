@@ -37,6 +37,11 @@ public class AgentService {
                 .map(agentMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return agentRepo.existsByUsername(username);
+    }
+
     @Transactional
     public void createAgent(RegisterAgentRequest request) {
         var agent = agentMapper.toEntity(request);

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface TransactionRepo extends JpaRepository<Transaction, Integer> {
-    List<Transaction> findTop10ByAgentUsernameOrderByDateDesc(String username);
+    List<Transaction> findTop10ByAgent_UsernameOrderByDateDesc(String username);
 
     @Query("SELECT t FROM Transaction t " +
             "JOIN FETCH t.vehicle " +
