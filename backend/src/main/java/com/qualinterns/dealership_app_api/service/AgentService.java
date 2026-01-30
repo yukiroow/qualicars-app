@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,7 @@ public class AgentService {
     public void createAgent(RegisterAgentRequest request) {
         var agent = agentMapper.toEntity(request);
 //        agent.setPassword(passwordEncoder.encode(agent.getPassword()));
+        agent.setDate_joined(LocalDate.now());
         var savedAgent = agentRepo.save(agent);
         agentMapper.toDto(savedAgent);
     }

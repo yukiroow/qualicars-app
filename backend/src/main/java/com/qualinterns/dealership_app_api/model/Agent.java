@@ -28,6 +28,6 @@ public class Agent {
     private String address;
     @Column(name = "contact", nullable = false)
     private String contact;
-    @Column(name = "date_joined", nullable = false)
+
     private LocalDate date_joined;
 }
