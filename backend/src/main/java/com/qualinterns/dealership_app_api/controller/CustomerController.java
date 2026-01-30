@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class CustomerController {
                                                                @RequestParam(defaultValue = "0") int page,
                                                                @RequestParam int size) {
         try {
-            Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size);
+            Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size, Sort.by(Sort.Order.asc("name").ignoreCase()));
             Page<?> customers;
             Map<String, Object> response = new HashMap<>();
             if (withId) {

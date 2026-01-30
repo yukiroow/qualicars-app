@@ -8,7 +8,7 @@ import type {
 
 const RecentSalesPanel = ({ username, setInitState }: PanelProp) => {
     const { getRequest } = useApiFetch();
-    const [recentSales, setRecentSales] = useState<RecentSalesObject[]>();
+    const [recentSales, setRecentSales] = useState<RecentSalesObject[]>([]);
     useEffect(() => {
         const fetchData = async () => {
             const response: ApiResponse = await getRequest({
@@ -28,7 +28,7 @@ const RecentSalesPanel = ({ username, setInitState }: PanelProp) => {
                 }));
                 return;
             }
-            setRecentSales(response.responseData.recentTransactions);
+            setRecentSales(response.responseData.recentTransactions!);
             setInitState((prev) => ({
                 ...prev,
                 recentSales: true,
@@ -51,7 +51,7 @@ const RecentSalesPanel = ({ username, setInitState }: PanelProp) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {!recentSales ? (
+                            {recentSales.length === 0 ? (
                                 <tr>
                                     <td
                                         key="02"

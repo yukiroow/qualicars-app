@@ -20,7 +20,7 @@ public class CustomerService {
     private final CustomerRepo customerRepo;
     private final CustomerMapper customerMapper;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<CustomerDto> getAllCustomers(Pageable pageable) {
         return customerRepo.findAll(pageable)
                 .map(customerMapper::toDto);

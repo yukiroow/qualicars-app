@@ -3,6 +3,7 @@ package com.qualinterns.dealership_app_api.controller;
 import com.qualinterns.dealership_app_api.dto.RecentTransactionDto;
 import com.qualinterns.dealership_app_api.dto.RegisterTransactionRequest;
 import com.qualinterns.dealership_app_api.dto.TransactionDto;
+import com.qualinterns.dealership_app_api.service.AgentService;
 import com.qualinterns.dealership_app_api.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
+    private AgentService agentService;
     private TransactionService transactionService;
 
     @GetMapping
@@ -44,10 +46,10 @@ public class TransactionController {
     @GetMapping("/agent/{username}")
     public ResponseEntity<HashMap<String, List<RecentTransactionDto>>> getTransactionsByUsername(@PathVariable String username) {
         try {
-            var recentTransactions = transactionService.getRecentSalesByAgent(username);
-            if (recentTransactions.isEmpty()) {
+            if (!agentService.existsByUsername((username))) {
                 return ResponseEntity.notFound().build();
             }
+            var recentTransactions = transactionService.getRecentSalesByAgent(username);
             HashMap<String, List<RecentTransactionDto>> response = new HashMap<>();
             response.put("recentTransactions", recentTransactions);
             return ResponseEntity.ok(response);

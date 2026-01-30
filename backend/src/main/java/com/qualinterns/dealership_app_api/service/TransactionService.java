@@ -68,7 +68,7 @@ public class TransactionService {
 
     @Transactional(readOnly = true)
     public List<RecentTransactionDto> getRecentSalesByAgent(String username) {
-        return transactionRepo.findTop10ByAgentUsernameOrderByDateDesc(username)
+        return transactionRepo.findTop10ByAgent_UsernameOrderByDateDesc(username)
                 .stream()
                 .map(transactionMapper::toRecentDto)
                 .toList();

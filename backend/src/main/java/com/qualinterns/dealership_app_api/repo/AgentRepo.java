@@ -15,4 +15,7 @@ public interface AgentRepo extends JpaRepository<Agent, Short> {
     // Parameterized query
     @Query("SELECT a FROM Agent a WHERE a.username = :username")
     Optional<Agent> findByUsernameParameterized(@Param("username") String username);
+
+    @Query("SELECT COUNT(a) > 0 FROM Agent a WHERE a.username = :username")
+    boolean existsByUsername(@Param("username") String username);
 }
