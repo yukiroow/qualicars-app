@@ -40,7 +40,7 @@ public class AgentService {
     @Transactional
     public void createAgent(RegisterAgentRequest request) {
         var agent = agentMapper.toEntity(request);
-//        agent.setPassword(passwordEncoder.encode(agent.getPassword()));
+        agent.setPassword(passwordEncoder.encode(agent.getPassword()));
         agent.setDate_joined(LocalDate.now());
         var savedAgent = agentRepo.save(agent);
         agentMapper.toDto(savedAgent);
@@ -74,8 +74,7 @@ public class AgentService {
     public void updatePassword(String username, AgentChangePassword newAgentPassword) {
         Agent existingAgent = agentRepo.findByUsername(username).orElse(null);
         assert existingAgent != null;
-
-        existingAgent.setPassword(newAgentPassword.getPassword());
+        existingAgent.setPassword(passwordEncoder.encode(newAgentPassword.getPassword()));
         agentRepo.save(existingAgent);
     }
 
@@ -84,13 +83,9 @@ public class AgentService {
 
         var agent = agentRepo.findByUsername(request.getUsername()).orElse(null);
 
-        if (agent != null && agent.getPassword().equals(request.getPassword())) {
+        if (agent != null && passwordEncoder.matches(request.getPassword(), agent.getPassword())) {
             return "Login successful!";
         }
-
-//        if (agent != null && passwordEncoder.matches(request.getPassword(), agent.getPassword())) {
-//            return "Login successful!";
-//        }
         return "Invalid username or password";
     }
 }
