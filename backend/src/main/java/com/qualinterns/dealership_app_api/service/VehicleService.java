@@ -41,6 +41,7 @@ public class VehicleService {
     @Transactional
     public void createVehicle(VehicleDto vehicleDto) {
         var vehicle = vehicleMapper.toEntity(vehicleDto);
+        vehicle.setAvailable(true);
         var savedVehicle = vehicleRepo.save(vehicle);
         vehicleMapper.toDto(savedVehicle);
     }
