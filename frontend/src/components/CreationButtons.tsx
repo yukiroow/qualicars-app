@@ -3,6 +3,10 @@ import type { StateProps } from "../props/PropInterfaces";
 const CreationButtons = ({ setModalOpen }: StateProps) => {
     const showCustomerForm = (): void => {
         setModalOpen!((prev) => ({ ...prev, customer: true }));
+        const modal = document.getElementById(
+            "customer_modal",
+        )! as HTMLDialogElement;
+        modal.showModal();
     };
     const showVehicleForm = (): void => {
         setModalOpen!((prev) => ({ ...prev, vehicle: true }));

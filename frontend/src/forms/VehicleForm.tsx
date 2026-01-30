@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import type { VehicleProp } from "../props/PropInterfaces";
+import { handleBlur } from "../util/utils";
 const VehicleForm = ({
     vehicleData,
     setStep,
@@ -32,7 +33,8 @@ const VehicleForm = ({
                 maxLength={20}
                 value={vehicleData.make}
                 onChange={handleChange}
-                placeholder="Enter Vehicle Make/Model"
+                onBlur={handleBlur}
+                placeholder="Ex. Vaios GT"
             />
 
             <label className="label">Year</label>
@@ -43,7 +45,7 @@ const VehicleForm = ({
                 maxLength={4}
                 value={vehicleData.year}
                 onChange={handleChange}
-                placeholder="Enter Vehicle Year"
+                placeholder={`Ex. 2025 (2008 to ${new Date().getFullYear()}`}
             />
 
             <label className="label">Color</label>
@@ -54,7 +56,8 @@ const VehicleForm = ({
                 maxLength={20}
                 value={vehicleData.color}
                 onChange={handleChange}
-                placeholder="Enter Vehicle Color"
+                onBlur={handleBlur}
+                placeholder="Ex. Jade Green"
             />
             <label className="label">Engine Number</label>
             <input
@@ -64,7 +67,7 @@ const VehicleForm = ({
                 maxLength={25}
                 value={vehicleData.engineNo}
                 onChange={handleChange}
-                placeholder="Enter Vehicle Engine Number"
+                placeholder="Ex. 4SFE0169266"
             />
             <label className="label">Chassis No</label>
             <input
@@ -74,7 +77,7 @@ const VehicleForm = ({
                 maxLength={25}
                 value={vehicleData.chassisNo}
                 onChange={handleChange}
-                placeholder="Enter Vehicle Chassis No"
+                placeholder="Ex. 1HGCM82633A123456"
             />
             <button type="submit" className="btn btn-primary mt-4">
                 Next

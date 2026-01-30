@@ -57,7 +57,7 @@ Password Hashing
 
 ### Harry's
 
-Proper Input Validation
+~~Proper Input Validation~~
 
 ~~Add Transaction Action~~
 

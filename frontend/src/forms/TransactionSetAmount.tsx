@@ -21,7 +21,7 @@ const TransactionSelectAmount = ({
     };
     return (
         <form onSubmit={handleSubmit} className="fieldset rounded-box p-4 w-80">
-            <label className="label">Amount</label>
+            <label className="label">Amount (PHP)</label>
             <input
                 type="number"
                 className={`input w-full`}
@@ -29,9 +29,13 @@ const TransactionSelectAmount = ({
                 maxLength={20}
                 value={transactionData.amount}
                 onChange={(event) => {
+                    const { value } = event.target;
+                    if (value.length > 20) return;
                     setTransactionData!((prev) => ({
                         ...prev,
-                        amount: Number(event.target.value),
+                        amount: Number(
+                            value.replace(/\s/g, "").replace(/\D/g, ""),
+                        ),
                     }));
                 }}
                 placeholder="Enter Price of Vehicle"
