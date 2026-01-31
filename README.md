@@ -44,13 +44,13 @@ HttpOnly JWT tokens
 
 Rate limiting
 
-Non-parameterized SQL insertion
+~~Non-parameterized SQL insertion~~
 
-Parameterized SQL Insertion
+~~Parameterized SQL Insertion~~
 
-Server-side Input Validation
+~~Server-side Input Validation~~
 
-Password Hashing
+~~Password Hashing~~
 
 ## Frontend
 
