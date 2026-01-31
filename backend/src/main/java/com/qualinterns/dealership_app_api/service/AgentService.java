@@ -6,7 +6,7 @@ import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
 import com.qualinterns.dealership_app_api.mapper.AgentMapper;
 import com.qualinterns.dealership_app_api.model.Agent;
-import com.qualinterns.dealership_app_api.repo.UnsafeQuery;
+import com.qualinterns.dealership_app_api.repo.AgentDao;
 import com.qualinterns.dealership_app_api.repo.AgentRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +23,7 @@ public class AgentService {
     private final AgentRepo agentRepo;
     private final AgentMapper agentMapper;
     private final PasswordEncoder passwordEncoder;
-    private final UnsafeQuery unsafeQuery;
+    private final AgentDao agentDao;
 
     @Transactional(readOnly = true)
     public List<AgentDto> getAllAgents() {
@@ -99,9 +99,9 @@ public class AgentService {
     // Sample username input: newtest' OR '1'='1
     // For password input: Accepts any string, including empty values
 //    @Transactional
-//    public String login(AgentLoginRequest request) throws SQLException {
-//        var agent = unsafeQuery.login(request);
-//        if (agent.isPresent() ) {
+//    public String login(AgentLoginRequest request) {
+//        var agent = agentDao.login(request);
+//        if (agent != null) {
 //            return "Login successful!";
 //        }
 //        return "Invalid username or password";
