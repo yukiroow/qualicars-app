@@ -54,7 +54,7 @@ public class AgentController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AgentDto> createAgent(@ModelAttribute RegisterAgentRequest request) {
+    public ResponseEntity<AgentDto> createAgent(@Validated @ModelAttribute RegisterAgentRequest request) {
         try {
             agentService.createAgent(request);
             System.out.println("Agent created successfully");

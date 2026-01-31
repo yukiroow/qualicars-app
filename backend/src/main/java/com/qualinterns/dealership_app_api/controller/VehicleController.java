@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -62,7 +63,7 @@ public class VehicleController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<VehicleDto> createVehicle(@ModelAttribute VehicleDto vehicleDto) {
+    public ResponseEntity<VehicleDto> createVehicle(@ModelAttribute @Validated VehicleDto vehicleDto) {
         try {
             vehicleService.createVehicle(vehicleDto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -77,7 +78,7 @@ public class VehicleController {
     }
 
     @PatchMapping("/{vehicleId}")
-    public ResponseEntity<?> updateVehicle(@PathVariable int vehicleId, @RequestBody VehicleDto newVehicleDetails) {
+    public ResponseEntity<?> updateVehicle(@PathVariable int vehicleId, @RequestBody @Validated VehicleDto newVehicleDetails) {
         try {
             VehicleDto updatedVehicle = vehicleService.updateVehicle(vehicleId, newVehicleDetails);
             return ResponseEntity.ok(updatedVehicle);

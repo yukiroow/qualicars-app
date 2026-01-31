@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class TransactionController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<TransactionDto> createTransaction(@ModelAttribute RegisterTransactionRequest request) {
+    public ResponseEntity<TransactionDto> createTransaction(@ModelAttribute @Validated RegisterTransactionRequest request) {
         try {
             transactionService.createTransaction(request);
             return ResponseEntity.status(HttpStatus.CREATED).build();

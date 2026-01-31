@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +64,7 @@ public class CustomerController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CustomerDto> createCustomer(@ModelAttribute CustomerDto customerDto) {
+    public ResponseEntity<CustomerDto> createCustomer(@ModelAttribute @Validated CustomerDto customerDto) {
         try {
             customerService.createCustomer(customerDto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -78,7 +79,7 @@ public class CustomerController {
     }
 
     @PatchMapping(path = "/{customerId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @ModelAttribute CustomerDto newCustomerDetails) {
+    public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @ModelAttribute @Validated CustomerDto newCustomerDetails) {
         try {
             CustomerDto updatedCustomer = customerService.updateCustomer(customerId, newCustomerDetails);
             return ResponseEntity.ok(updatedCustomer);
