@@ -6,6 +6,7 @@ import com.qualinterns.dealership_app_api.dto.AgentLoginRequest;
 import com.qualinterns.dealership_app_api.dto.RegisterAgentRequest;
 import com.qualinterns.dealership_app_api.service.AgentService;
 import com.qualinterns.dealership_app_api.util.JwtTokenProvider;
+import io.github.bucket4j.Bucket;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class AgentController {
 
     private final AgentService agentService;
     private final JwtTokenProvider tokenProvider;
+    private final Bucket bucket;
 
     @GetMapping
     public ResponseEntity<HashMap<String, List<AgentDto>>> getAllAgents() {
@@ -101,6 +103,9 @@ public class AgentController {
     public ResponseEntity<?> login(@ModelAttribute AgentLoginRequest request, HttpServletResponse response) {
         try {
             var loginResult = agentService.login(request);
+
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
 
             if (loginResult.equals("Login successful!")) {
 
