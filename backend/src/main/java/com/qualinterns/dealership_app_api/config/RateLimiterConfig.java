@@ -12,7 +12,7 @@ import java.time.Duration;
 public class RateLimiterConfig {
     @Bean
     public Bucket bucket() {
-        Bandwidth limit = Bandwidth.classic(5, Refill.greedy(5, Duration.ofSeconds(60)));
+        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofSeconds(60)));
         return Bucket.builder().addLimit(limit).build();
     }
 }
