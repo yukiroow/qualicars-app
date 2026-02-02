@@ -31,8 +31,10 @@ public class AgentController {
     private final Bucket bucket;
 
     @GetMapping
-    public ResponseEntity<HashMap<String, List<AgentDto>>> getAllAgents() {
+    public ResponseEntity<?> getAllAgents() {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             var agent = agentService.getAllAgents();
             HashMap<String, List<AgentDto>> response = new HashMap<>();
             response.put("agents", agent);
@@ -44,7 +46,9 @@ public class AgentController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<HashMap<String, Optional<AgentDto>>> getAgentByUsername(@PathVariable String username) {
+    public ResponseEntity<?> getAgentByUsername(@PathVariable String username) {
+        if (!bucket.tryConsume(1))
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
         var agent = agentService.getAgentByUsername(username);
         if (agent.isEmpty()) {
             System.out.println("Agent not found");
@@ -56,8 +60,10 @@ public class AgentController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AgentDto> createAgent(@Validated @ModelAttribute RegisterAgentRequest request) {
+    public ResponseEntity<?> createAgent(@Validated @ModelAttribute RegisterAgentRequest request) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             agentService.createAgent(request);
             System.out.println("Agent created successfully");
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -72,6 +78,8 @@ public class AgentController {
     @PatchMapping(path = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateAgent(@PathVariable String username, @ModelAttribute @Validated AgentDto newAgentDetail) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             AgentDto updatedAgent = agentService.updateAgent(username, newAgentDetail);
             return ResponseEntity.ok(updatedAgent);
         } catch (EntityNotFoundException e) {
@@ -87,6 +95,8 @@ public class AgentController {
     @PatchMapping(path = "/password/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePassword(@PathVariable String username, @ModelAttribute @Validated AgentChangePassword newAgentPassword) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             agentService.updatePassword(username, newAgentPassword);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
@@ -125,6 +135,8 @@ public class AgentController {
     @PostMapping(path="/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             response.addCookie(createExpiredJwtCookie());
             return ResponseEntity.ok().body("Logout successful!");
         } catch (Exception e) {

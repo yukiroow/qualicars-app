@@ -5,6 +5,7 @@ import com.qualinterns.dealership_app_api.dto.RegisterTransactionRequest;
 import com.qualinterns.dealership_app_api.dto.TransactionDto;
 import com.qualinterns.dealership_app_api.service.AgentService;
 import com.qualinterns.dealership_app_api.service.TransactionService;
+import io.github.bucket4j.Bucket;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -26,11 +27,14 @@ public class TransactionController {
 
     private AgentService agentService;
     private TransactionService transactionService;
+    private Bucket bucket;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllTransaction(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<?> getAllTransaction(@RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "50") int size) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             Pageable pageable = PageRequest.of(page, size);
             var transactions = transactionService.getAllTransactions(pageable);
             Map<String, Object> response = new HashMap<>();
@@ -45,8 +49,10 @@ public class TransactionController {
     }
 
     @GetMapping("/agent/{username}")
-    public ResponseEntity<HashMap<String, List<RecentTransactionDto>>> getTransactionsByUsername(@PathVariable String username) {
+    public ResponseEntity<?> getTransactionsByUsername(@PathVariable String username) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             if (!agentService.existsByUsername((username))) {
                 return ResponseEntity.notFound().build();
             }
@@ -61,8 +67,10 @@ public class TransactionController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<TransactionDto> createTransaction(@ModelAttribute @Validated RegisterTransactionRequest request) {
+    public ResponseEntity<?> createTransaction(@ModelAttribute @Validated RegisterTransactionRequest request) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             transactionService.createTransaction(request);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException e) {

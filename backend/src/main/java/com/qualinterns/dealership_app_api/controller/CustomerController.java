@@ -2,6 +2,7 @@ package com.qualinterns.dealership_app_api.controller;
 
 import com.qualinterns.dealership_app_api.dto.CustomerDto;
 import com.qualinterns.dealership_app_api.service.CustomerService;
+import io.github.bucket4j.Bucket;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,12 +26,15 @@ import java.util.Optional;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final Bucket bucket;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllCustomers(@RequestParam(name = "withId", required = false) boolean withId,
+    public ResponseEntity<?> getAllCustomers(@RequestParam(name = "withId", required = false) boolean withId,
                                                                @RequestParam(defaultValue = "0") int page,
                                                                @RequestParam int size) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size, Sort.by(Sort.Order.asc("name").ignoreCase()));
             Page<?> customers;
             Map<String, Object> response = new HashMap<>();
@@ -50,8 +54,10 @@ public class CustomerController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<Optional<CustomerDto>> getCustomerByName(@PathVariable String name) {
+    public ResponseEntity<?> getCustomerByName(@PathVariable String name) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             var customer = customerService.getCustomerByName(name);
             if (customer.isEmpty()) {
                 return ResponseEntity.notFound().build();
@@ -64,8 +70,10 @@ public class CustomerController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CustomerDto> createCustomer(@ModelAttribute @Validated CustomerDto customerDto) {
+    public ResponseEntity<?> createCustomer(@ModelAttribute @Validated CustomerDto customerDto) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             customerService.createCustomer(customerDto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException e) {
@@ -81,6 +89,8 @@ public class CustomerController {
     @PatchMapping(path = "/{customerId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @ModelAttribute @Validated CustomerDto newCustomerDetails) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             CustomerDto updatedCustomer = customerService.updateCustomer(customerId, newCustomerDetails);
             return ResponseEntity.ok(updatedCustomer);
         } catch (EntityNotFoundException e) {
@@ -94,6 +104,8 @@ public class CustomerController {
     @DeleteMapping("/{customerId}")
     public ResponseEntity<?> deleteCustomer(@PathVariable int customerId) {
         try {
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
             customerService.deleteCustomer(customerId);
             return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
