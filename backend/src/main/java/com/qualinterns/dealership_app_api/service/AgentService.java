@@ -96,14 +96,14 @@ public class AgentService {
         return "Invalid username or password";
     }
 
-    // Sample username input: newtest' OR '1'='1
+    // Sample username input: newuser' OR '1'='1
     // For password input: Accepts any string, including empty values
-//    @Transactional
-//    public String login(AgentLoginRequest request) {
-//        var agent = agentDao.login(request);
-//        if (agent != null) {
-//            return "Login successful!";
-//        }
-//        return "Invalid username or password";
-//    }
+    @Transactional
+    public String unsafeLogin(AgentLoginRequest request) {
+        var agent = agentDao.login(request);
+        if (agent != null) {
+            return "Login successful!";
+        }
+        return "Invalid username or password";
+    }
 }

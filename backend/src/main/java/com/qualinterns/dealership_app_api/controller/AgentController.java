@@ -132,6 +132,29 @@ public class AgentController {
         }
     }
 
+    @PostMapping(path="/unsafelogin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> unsafeLogin(@ModelAttribute AgentLoginRequest request, HttpServletResponse response) {
+        try {
+            var loginResult = agentService.unsafeLogin(request);
+
+            if (!bucket.tryConsume(1))
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit exceeded. Try again later.");
+
+            if (loginResult.equals("Login successful!")) {
+
+                String jwtToken = tokenProvider.generateToken(request.getUsername());
+
+                response.addCookie(createHttpOnlyJwtCookie(jwtToken));
+
+                return ResponseEntity.ok().body(loginResult);
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResult);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PostMapping(path="/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         try {
